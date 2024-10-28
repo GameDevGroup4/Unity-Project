@@ -30,3 +30,5 @@ Video link: https://www.youtube.com/watch?v=pNUdu-6ZNBg&t=98s
 
 ## Comments
 If you want to try new idea, you can push the code to new braches other than main to make sure the main code are safe
+
+Then if you are sure about your idea, you can create pull request and merge the modified branch to main branch
