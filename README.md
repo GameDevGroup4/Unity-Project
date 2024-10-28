@@ -26,3 +26,7 @@ Video link: https://www.youtube.com/watch?v=pNUdu-6ZNBg&t=98s
 5. click the arrow next to "Open" and select "Add project from disk"
 6. Go to the local path of the github repo and add this project
 7. Open the project and make changes
+
+
+## Comments
+If you want to try new idea, you can push the code to new braches other than main to make sure the main code are safe
