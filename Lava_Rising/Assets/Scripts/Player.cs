@@ -1,5 +1,6 @@
 
 using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 
@@ -7,6 +8,11 @@ public class Player : MonoBehaviour
 {
     [SerializeField] public float speed = 2f;
     [SerializeField] private Transform groundCheckCollider;
+    [SerializeField] private bool isGrounded = false;
+    
+    const float groundRadius = 0.2f;
+    
+    [SerializeField] LayerMask groundMask;
     
     private Rigidbody2D rb;
     private float horizontalval;
@@ -14,11 +20,12 @@ public class Player : MonoBehaviour
     
     Animator animator;
 
-    private bool isGrounded = false;
+    
     bool isRunning = false;
     bool facingRight = true;
     private void Awake()
     {
+        //Initialization
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
     }
@@ -27,7 +34,8 @@ public class Player : MonoBehaviour
     {
         //Get horizontal value
         horizontalval = Input.GetAxisRaw("Horizontal");
-
+        
+        //Running input
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             isRunning = true;
@@ -40,16 +48,26 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        GroundCheck();
         Move(horizontalval);
     }
-
+    
+    //Check if player is on the ground
     void GroundCheck()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheckCollider.position, .2f);
+        isGrounded = false;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheckCollider.position, groundRadius, groundMask);
+        //Grounded is true if hit the collider
+        if (colliders.Length > 0)
+        {
+            isGrounded = true;
+        }
     }
-
+    
+    //horizontal movement
     void Move(float dir)
     {
+        //movement speed
         float xVal = dir * speed * 100 * Time.fixedDeltaTime;
         
         if (isRunning)
@@ -60,6 +78,7 @@ public class Player : MonoBehaviour
         Vector2 targetVelocity = new Vector2(xVal, rb.velocity.y);
         rb.velocity = targetVelocity;
         
+        //Mirroring the move if go opposite direction
         if (facingRight && dir < 0)
         {
             transform.localScale = new Vector3(-1, 1, 1);
@@ -72,8 +91,8 @@ public class Player : MonoBehaviour
         }
         // Debug.Log(rb.velocity.x);
         
-        // idle 0; walk 4; run 8
         
+        // idle 0; walk 4; run 8
         animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
     }
 }
