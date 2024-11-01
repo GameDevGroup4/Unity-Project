@@ -4,7 +4,7 @@ The Unity Project with all the stuff in game
 ## Download Github Desktop App
 https://github.com/apps/desktop
 
-## Unity & Github Link instruction (For Creater)
+## Unity & Github Link instruction (For Creater) **Already done by Harry**
 Video link: https://www.youtube.com/watch?v=pNUdu-6ZNBg&t=98s
 1. Open Github Desktop App
 2. Go to Clone Repository
