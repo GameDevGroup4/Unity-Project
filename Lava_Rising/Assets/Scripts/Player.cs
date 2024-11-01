@@ -51,12 +51,16 @@ public class Player : MonoBehaviour
         //jumping input
         if (Input.GetButtonDown("Jump"))
         {
+            animator.SetBool("Jump", true);
             jump = true;
         }
         else if (Input.GetButtonUp("Jump"))
         {
             jump = false;
         }
+        
+        //Set yVelocity
+        animator.SetFloat("yVelocity", rb.velocity.y);
     }
 
     void FixedUpdate()
@@ -75,18 +79,29 @@ public class Player : MonoBehaviour
         {
             isGrounded = true;
         }
+        
+        //Disable jump when grounded
+        animator.SetBool("Jump", !isGrounded);
     }
     
     
     void Move(float dir, bool jumpFlag)
     {
-        if (isGrounded && jumpFlag)
+        #region Jump & Shoot
+        
+        //Jumping
+        if (isGrounded)
         {
-            isGrounded = false;
-            jumpFlag = false;
-            //jumpforce
-            rb.AddForce(new Vector2(0f, jumpHeight));
+            if (jumpFlag)
+            {
+                // isGrounded = false;
+                jumpFlag = false;
+                
+                //jumping to force
+                rb.AddForce(new Vector2(0f, jumpHeight));
+            }
         }
+        #endregion
         //horizontal movement
         #region Move and Run
         //movement speed
