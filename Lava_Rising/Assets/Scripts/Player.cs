@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform groundCheckCollider;
     [SerializeField] private bool isGrounded = false;
     [SerializeField] LayerMask groundMask;
-    [SerializeField] float jumpHeight = 300f;
+    [SerializeField] float jumpHeight = 130f;
     
     const float groundRadius = 0.2f;
     
