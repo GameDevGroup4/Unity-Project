@@ -9,18 +9,21 @@ public class Player : MonoBehaviour
     [SerializeField] public float speed = 2f;
     [SerializeField] private Transform groundCheckCollider;
     [SerializeField] private bool isGrounded = false;
+    [SerializeField] LayerMask groundMask;
+    [SerializeField] float jumpHeight = 300f;
     
     const float groundRadius = 0.2f;
     
-    [SerializeField] LayerMask groundMask;
+    
     
     private Rigidbody2D rb;
     private float horizontalval;
     private float runSpeedMutiplier = 2;
     
+    
     Animator animator;
 
-    
+    bool jump = false;
     bool isRunning = false;
     bool facingRight = true;
     private void Awake()
@@ -44,12 +47,22 @@ public class Player : MonoBehaviour
         {
             isRunning = false;
         }
+        
+        //jumping input
+        if (Input.GetButtonDown("Jump"))
+        {
+            jump = true;
+        }
+        else if (Input.GetButtonUp("Jump"))
+        {
+            jump = false;
+        }
     }
 
     void FixedUpdate()
     {
         GroundCheck();
-        Move(horizontalval);
+        Move(horizontalval, jump);
     }
     
     //Check if player is on the ground
@@ -64,9 +77,18 @@ public class Player : MonoBehaviour
         }
     }
     
-    //horizontal movement
-    void Move(float dir)
+    
+    void Move(float dir, bool jumpFlag)
     {
+        if (isGrounded && jumpFlag)
+        {
+            isGrounded = false;
+            jumpFlag = false;
+            //jumpforce
+            rb.AddForce(new Vector2(0f, jumpHeight));
+        }
+        //horizontal movement
+        #region Move and Run
         //movement speed
         float xVal = dir * speed * 100 * Time.fixedDeltaTime;
         
@@ -94,5 +116,6 @@ public class Player : MonoBehaviour
         
         // idle 0; walk 4; run 8
         animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
+        #endregion
     }
 }
