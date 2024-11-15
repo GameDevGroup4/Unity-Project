@@ -1,36 +1,35 @@
 
 using System;
-using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] public float speed = 2f;
-    [SerializeField] private Transform groundCheckCollider;
-    [SerializeField] private bool isGrounded = false;
-    [SerializeField] LayerMask groundMask;
-    [SerializeField] float jumpHeight = 130f;
+    [SerializeField] private LayerMask groundMask;
     
-    const float groundRadius = 0.2f;
-    
-    
+    [SerializeField] private Animator animator;
     
     private Rigidbody2D rb;
+    private float speed = 2f;
+    private float jumpHeight = 10f;
+    
     private float horizontalval;
     private float runSpeedMutiplier = 2;
-    
-    
-    Animator animator;
 
-    bool jump = false;
-    bool isRunning = false;
-    bool facingRight = true;
+    private int airJumps;
+    private int maxAirJumps;
+    
+    private bool isGrounded;
+    private bool isRunning;
+    private bool facingRight = true;
+    
     private void Awake()
     {
         //Initialization
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        maxAirJumps = 1;
     }
     
     void Update()
@@ -39,71 +38,38 @@ public class Player : MonoBehaviour
         horizontalval = Input.GetAxisRaw("Horizontal");
         
         //Running input
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            isRunning = true;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            isRunning = false;
-        }
+        isRunning = Input.GetKey(KeyCode.LeftShift);
         
-        //jumping input
-        if (Input.GetButtonDown("Jump"))
+        // Jumping & Double Jumping
+        if (Input.GetButtonDown("Jump") && airJumps > 0)
         {
             animator.SetBool("Jump", true);
-            jump = true;
+            rb.velocity = new Vector2(rb.velocity.x,0);
+            rb.AddForce(new Vector2(0f, 25 * jumpHeight));
+            if (!isGrounded)
+            {
+                airJumps--;
+            }
+            
+            //TODO: Control jumps by letting go at desired height
         }
-        else if (Input.GetButtonUp("Jump"))
-        {
-            jump = false;
-        }
+
+        // Grounded check
+        isGrounded = rb.IsTouchingLayers(groundMask);
         
-        //Set yVelocity
+        // Set yVelocity
         animator.SetFloat("yVelocity", rb.velocity.y);
     }
 
     void FixedUpdate()
     {
-        GroundCheck();
-        Move(horizontalval, jump);
+        Move(horizontalval);
     }
     
-    //Check if player is on the ground
-    void GroundCheck()
+    void Move(float dir)
     {
-        isGrounded = false;
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheckCollider.position, groundRadius, groundMask);
-        //Grounded is true if hit the collider
-        if (colliders.Length > 0)
-        {
-            isGrounded = true;
-        }
-        
-        //Disable jump when grounded
-        animator.SetBool("Jump", !isGrounded);
-    }
-    
-    
-    void Move(float dir, bool jumpFlag)
-    {
-        #region Jump & Shoot
-        
-        //Jumping
-        if (isGrounded)
-        {
-            if (jumpFlag)
-            {
-                // isGrounded = false;
-                jumpFlag = false;
-                
-                //jumping to force
-                rb.AddForce(new Vector2(0f, jumpHeight));
-            }
-        }
-        #endregion
         //horizontal movement
-        #region Move and Run
+        
         //movement speed
         float xVal = dir * speed * 100 * Time.fixedDeltaTime;
         
@@ -128,9 +94,15 @@ public class Player : MonoBehaviour
         }
         // Debug.Log(rb.velocity.x);
         
-        
         // idle 0; walk 4; run 8
         animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
-        #endregion
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        airJumps = maxAirJumps;
+        
+        //Disable jump when grounded
+        animator.SetBool("Jump", false);
     }
 }
