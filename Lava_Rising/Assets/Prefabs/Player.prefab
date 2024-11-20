@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8459036589921166126}
   - component: {fileID: 1341899197306779802}
   - component: {fileID: 5298482652163375144}
-  - component: {fileID: -4989808315992123210}
+  - component: {fileID: 857843937473095774}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -50,9 +50,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   groundMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 128
   animator: {fileID: 1341899197306779802}
-  tilemap: {fileID: 0}
+  playerSounds:
+  - {fileID: 8300000, guid: 854d0f467c428494984a016d146dfb6e, type: 3}
+  - {fileID: 8300000, guid: e588d7723ec19c54da124fba594dfa02, type: 3}
+  - {fileID: 8300000, guid: ffc855db51c071c4fbf8c8d53582c97f, type: 3}
 --- !u!212 &8459036589921166126
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -145,10 +148,10 @@ Rigidbody2D:
   m_Material: {fileID: 6200000, guid: a56b90094b97ee34da3491004e39b6b1, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 4
---- !u!70 &-4989808315992123210
-CapsuleCollider2D:
+--- !u!61 &857843937473095774
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -160,6 +163,16 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.025, y: -0.15}
-  m_Size: {x: 1.2, y: 1.8000002}
-  m_Direction: 0
+  m_Offset: {x: 0.025, y: -0.22}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.6, y: 1.9}
+    newSize: {x: 1.6, y: 1.9}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.05, y: 1.45}
+  m_EdgeRadius: 0

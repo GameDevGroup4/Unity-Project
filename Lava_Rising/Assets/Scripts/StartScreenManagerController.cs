@@ -31,7 +31,7 @@ public class StartScreenManagerController : MonoBehaviour
     void LoadScreen()
     {
         startMusic.Stop();
-        SceneManager.LoadScene("Scenes/Main");
+        SceneManager.LoadScene("Scenes/SampleScene");
     }
     
     void blinkStartButton()
@@ -48,5 +48,6 @@ public class StartScreenManagerController : MonoBehaviour
         {
             startMusic.Play();
         }
+        
     }
 }
