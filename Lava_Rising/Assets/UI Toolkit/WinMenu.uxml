@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; background-image: url(&quot;project://database/Assets/UI%20Toolkit/Images/WinScreen.jpg?fileID=2800000&amp;guid=26e9bf5288d344c51aad473a20af99f2&amp;type=3#WinScreen&quot;);">
+        <ui:Button text="Button" display-tooltip-when-elided="true" name="restart" />
+    </ui:VisualElement>
+</ui:UXML>

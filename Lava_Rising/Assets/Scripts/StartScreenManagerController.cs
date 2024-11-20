@@ -28,18 +28,18 @@ public class StartScreenManagerController : MonoBehaviour
         muteButton.RegisterCallback<ClickEvent>(ev => muteSound());
     }
     
-    void LoadScreen()
+    private void LoadScreen()
     {
         startMusic.Stop();
         SceneManager.LoadScene("Scenes/Main");
     }
     
-    void blinkStartButton()
+    private void blinkStartButton()
     {
         startButton.visible = !startButton.visible;
     }
 
-    void muteSound()
+    private void muteSound()
     {
         if (startMusic.isPlaying)
         { 

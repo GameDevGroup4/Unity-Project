@@ -2,6 +2,7 @@
 using System;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
@@ -134,6 +135,7 @@ public class Player : MonoBehaviour
             {
                 if (tile.name == "tileset_23")
                 {
+                    SceneManager.LoadScene("Scenes/Lose");
                     gameOver = true;
                     Debug.Log("Game Over");
                 }
