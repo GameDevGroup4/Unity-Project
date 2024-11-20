@@ -2,12 +2,15 @@
 using System;
 using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private LayerMask groundMask;
     
     [SerializeField] private Animator animator;
+    
+    [SerializeField] private Tilemap tilemap;
     
     private Rigidbody2D rb;
     private float speed = 2f;
@@ -22,6 +25,9 @@ public class Player : MonoBehaviour
     private bool isGrounded;
     private bool isRunning;
     private bool facingRight = true;
+
+    private bool gameOver = false;
+    private bool gameWon = true;
     
     private void Awake()
     {
@@ -59,8 +65,12 @@ public class Player : MonoBehaviour
         
         // Set yVelocity
         animator.SetFloat("yVelocity", rb.velocity.y);
+        
+        //game ends when player steps on lava
+        
+        
     }
-
+    
     void FixedUpdate()
     {
         Move(horizontalval);
@@ -101,8 +111,33 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         airJumps = maxAirJumps;
-        
+
         //Disable jump when grounded
         animator.SetBool("Jump", false);
+
+        // Check if we are colliding with a Tilemap
+        Tilemap tilemap = collision.collider.GetComponentInParent<Tilemap>();
+        if (tilemap != null)
+        {
+            // Get the contact point of the collision
+            ContactPoint2D contact = collision.contacts[0];
+
+            // Convert the contact point to grid coordinates
+            Vector3Int gridPosition = tilemap.WorldToCell(contact.point);
+            Vector3Int belowGridPosition = new Vector3Int(gridPosition.x, gridPosition.y - 1, gridPosition.z);
+
+
+            // Get the tile at the grid position
+            TileBase tile = tilemap.GetTile(belowGridPosition);
+
+            if (tile != null)
+            {
+                if (tile.name == "tileset_23")
+                {
+                    gameOver = true;
+                    Debug.Log("Game Over");
+                }
+            }
+        }
     }
 }

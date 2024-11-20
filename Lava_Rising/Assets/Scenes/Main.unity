@@ -3658,13 +3658,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b794502382eaa34ca2c44c3137fc426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  groundCheckCollider: {fileID: 1024705948}
-  isGrounded: 0
   groundMask:
     serializedVersion: 2
     m_Bits: 128
-  jumpHeight: 130
+  animator: {fileID: 1423004507}
+  tilemap: {fileID: 917740596}
 --- !u!95 &1423004507
 Animator:
   serializedVersion: 5
