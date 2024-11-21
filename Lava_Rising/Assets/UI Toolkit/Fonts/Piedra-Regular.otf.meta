@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 14b75f2fdf8334210b7bd4b70e94dd11
+guid: ea0e6e7bb2ad21347a8e1592d6a71183
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Intense Horror
+  - Piedra
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

@@ -776,11 +776,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 
+  cloudProjectId: 7c0661c6-4f49-4e60-b847-ba1930cd3571
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
-  organizationId: 
+  projectName: Lava_Rising
+  organizationId: avafacciolo
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 
