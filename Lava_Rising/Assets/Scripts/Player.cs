@@ -2,7 +2,7 @@
 using System;
 using UnityEditor.UIElements;
 using UnityEngine;
-using Random = Unity.Mathematics.Random;
+using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     
     private Rigidbody2D rb;
     private AudioSource playerAS;
+    private LevelManager levelManager;
     
     private float speed = 2f;
     private float jumpHeight = 10f;
@@ -37,6 +38,8 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerAS = GetComponent<AudioSource>();
+        
+        levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
 
         maxAirJumps = 1;
     }
@@ -145,5 +148,28 @@ public class Player : MonoBehaviour
         }
 
         // Wall jumping
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Check if we are colliding with a Tilemap
+        Tilemap tilemap = collision.collider.GetComponentInParent<Tilemap>();
+        if (tilemap != null)
+        {
+            // Get the contact point of the collision
+            ContactPoint2D contact = collision.contacts[0];
+            // Convert the contact point to grid coordinates
+            Vector3Int gridPosition = tilemap.WorldToCell(contact.point);
+            Vector3Int belowGridPosition = new Vector3Int(gridPosition.x, gridPosition.y - 1, gridPosition.z);
+            // Get the tile at the grid position
+            TileBase tile = tilemap.GetTile(belowGridPosition);
+            if (tile != null)
+            {
+                if (tile.name == "tileset_23")
+                {
+                    levelManager.endGame(false);
+                }
+            }
+        }
     }
 }
