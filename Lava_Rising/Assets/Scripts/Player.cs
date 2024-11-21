@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,6 +13,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Animator animator;
     
     [SerializeField] private AudioClip[] playerSounds;
+
+    private bool canMove = true;
     
     private Rigidbody2D rb;
     private AudioSource playerAS;
@@ -35,6 +39,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         //Initialization
+        
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerAS = GetComponent<AudioSource>();
@@ -46,6 +51,13 @@ public class Player : MonoBehaviour
     
     void Update()
     {
+        if (!canMove)
+        {
+            speed = 0;
+            animator.SetBool("Jump", false);
+            return;
+        }
+        
         elevation = transform.position.y;
         
         //Get horizontal value
@@ -158,9 +170,11 @@ public class Player : MonoBehaviour
         {
             // Get the contact point of the collision
             ContactPoint2D contact = collision.contacts[0];
+            
             // Convert the contact point to grid coordinates
             Vector3Int gridPosition = tilemap.WorldToCell(contact.point);
             Vector3Int belowGridPosition = new Vector3Int(gridPosition.x, gridPosition.y - 1, gridPosition.z);
+            
             // Get the tile at the grid position
             TileBase tile = tilemap.GetTile(belowGridPosition);
             //End game if the player touches lava
@@ -168,9 +182,20 @@ public class Player : MonoBehaviour
             {
                 if (tile.name == "tileset_23")
                 {
-                    levelManager.endGame(false);
+                    canMove = false;
+                    playerAS.Stop();
+                    playerAS.clip = playerSounds[3];
+                    //playerAS.time = .5f;
+                    playerAS.Play();
+
+                    StartCoroutine(EndGameWithSound());
                 }
             }
         }
+    }
+    IEnumerator EndGameWithSound()
+    {
+        yield return new WaitForSeconds(playerSounds[3].length - 0.5f);
+        levelManager.endGame(false);
     }
 }

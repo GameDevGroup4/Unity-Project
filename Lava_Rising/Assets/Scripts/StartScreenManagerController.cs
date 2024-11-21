@@ -11,10 +11,12 @@ public class StartScreenManagerController : MonoBehaviour
     private Button muteButton;
     private AudioSource startMusic;
     private Camera mainCamera;
-    
+
+    private bool mute;
     // Start is called before the first frame update
     void Start()
     {
+        mute = false;
         root = GetComponent<UIDocument>().rootVisualElement;
         startButton = root.Q<Button>("start");
         muteButton = root.Q<Button>("mute");
@@ -41,10 +43,11 @@ public class StartScreenManagerController : MonoBehaviour
 
     private void muteSound()
     {
-        if (startMusic.isPlaying)
+        mute = !mute;
+        if (mute)
         { 
             startMusic.Pause();
-        } else if (!startMusic.isPlaying)
+        } else if (!mute)
         {
             startMusic.Play();
         }

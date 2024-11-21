@@ -19,7 +19,6 @@ public class LoseScreenManagerController: MonoBehaviour
     
     private void LoadScreen()
     {
-        Debug.Log("Loading screen");
         SceneManager.LoadScene("Scenes/Start");
     }
 }
