@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using Unity.VisualScripting;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,6 +10,11 @@ using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] public AudioClip[] avaSounds;
+    [SerializeField] public AudioClip[] harrySounds;
+    private AudioSource playerAS;
+    public AudioSource backgroundMusicSource;
+    
     [SerializeField] private LayerMask groundMask;
     
     [SerializeField] private Animator animator;
@@ -16,12 +23,13 @@ public class Player : MonoBehaviour
 
     private bool canMove = true;
     
+    private Camera mainCamera;
+    
     private Rigidbody2D rb;
-    private AudioSource playerAS;
     private LevelManager levelManager;
     
     private float speed = 2f;
-    private float jumpHeight = 20f;
+    private float jumpHeight = 10f;
     private float wallCheckDistance = 0.7f;
     
     private float horizontalval;
@@ -29,7 +37,7 @@ public class Player : MonoBehaviour
 
     private int airJumps;
     private int maxAirJumps;
-
+    
     private Vector2 crown;
     private Vector2 feet;
     
@@ -47,13 +55,27 @@ public class Player : MonoBehaviour
         
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        playerAS = GetComponent<AudioSource>();
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        backgroundMusicSource = audioSources[0];
+        playerAS = audioSources[1];
         
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
         targetElevation = levelManager.getTarget();
-
+        
         closeToWin = false;
         maxAirJumps = 1;
+    }
+    
+    void Start()
+    {
+        playerAS.volume = 0.7f;
+        if (StartScreenManagerController.selectedMusic == "Harry")
+        {
+            backgroundMusicSource.clip = harrySounds[0];
+            backgroundMusicSource.volume = 0.3f; // Lower volume for Harry's background music
+        }
+        backgroundMusicSource.loop = true; // Enable looping for background music
+        backgroundMusicSource.Play();
     }
     
     void Update()
@@ -67,7 +89,6 @@ public class Player : MonoBehaviour
         
         elevation = transform.position.y;
         
-        //TODO: Add win condition here
         if (elevation >= targetElevation)
         {
             Debug.Log("Win");
@@ -84,6 +105,7 @@ public class Player : MonoBehaviour
         //Running input
         isRunning = Input.GetKey(KeyCode.LeftShift);
         
+        // Jumping & Double Jumping
         // Jumping & Double Jumping & Wall Jumping
         crown = new Vector2(transform.position.x, transform.position.y + 0.5f);
         feet = new Vector2(transform.position.x, transform.position.y - 1f);
@@ -95,9 +117,6 @@ public class Player : MonoBehaviour
             animator.SetBool("Jump", true);
             rb.velocity = new Vector2(rb.velocity.x, 0f);
             rb.AddForce(new Vector2(0f, 25 * jumpHeight));
-            
-            //TODO: Push off wall
-            
             if (!isGrounded)
             {
                 if (wall == 0)
@@ -119,7 +138,6 @@ public class Player : MonoBehaviour
             
             //TODO: Control jumps by letting go at desired height
         }
-        
         // Set yVelocity
         animator.SetFloat("yVelocity", rb.velocity.y);
     }
@@ -174,6 +192,7 @@ public class Player : MonoBehaviour
                 playerAS.clip = playerSounds[2];
                 playerAS.Play();
             }
+
             isGrounded = true;
             airJumps = maxAirJumps;
             animator.SetBool("Jump", false);
@@ -184,14 +203,12 @@ public class Player : MonoBehaviour
             animator.SetBool("Jump", true);
         }
     }
-
     private int wallCling()
     {
         bool rayCrownL= Physics2D.Raycast(crown, Vector2.left, wallCheckDistance, groundMask);
         bool rayCrownR= Physics2D.Raycast(crown, Vector2.right, wallCheckDistance, groundMask);
         bool rayFeetL= Physics2D.Raycast(feet, Vector2.left, wallCheckDistance, groundMask);
         bool rayFeetR= Physics2D.Raycast(feet, Vector2.right, wallCheckDistance, groundMask);
-
         if (rayCrownL && rayFeetL)
         {
             return 1;
@@ -202,7 +219,7 @@ public class Player : MonoBehaviour
         }
         
         return 0;
-    }
+}
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -224,20 +241,21 @@ public class Player : MonoBehaviour
             {
                 if (tile.name == "tileset_23")
                 {
+                    StartCoroutine(EndGameWithSound());
                     canMove = false;
                     playerAS.Stop();
+                    backgroundMusicSource.Stop();
                     playerAS.clip = playerSounds[3];
                     //playerAS.time = .5f;
                     playerAS.Play();
-
-                    StartCoroutine(EndGameWithSound());
                 }
             }
         }
     }
     IEnumerator EndGameWithSound()
     {
-        yield return new WaitForSeconds(playerSounds[3].length - 0.5f);
-        levelManager.endGame(false);
+            yield return new WaitForSeconds(playerSounds[3].length - 0.5f); 
+            levelManager.endGame(false);
     }
+    
 }
