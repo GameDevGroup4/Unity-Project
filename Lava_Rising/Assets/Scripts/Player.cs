@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     private LevelManager levelManager;
     
     private float speed = 2f;
-    private float jumpHeight = 10f;
+    private float jumpHeight = 20f;
     private float wallCheckDistance = 0.7f;
     
     private float horizontalval;
@@ -29,12 +29,17 @@ public class Player : MonoBehaviour
 
     private int airJumps;
     private int maxAirJumps;
+
+    private Vector2 crown;
+    private Vector2 feet;
     
     private bool isGrounded;
     private bool isRunning;
     private bool facingRight = true;
+    private bool closeToWin;
 
     private float elevation;
+    private float targetElevation;
     
     private void Awake()
     {
@@ -45,7 +50,9 @@ public class Player : MonoBehaviour
         playerAS = GetComponent<AudioSource>();
         
         levelManager = GameObject.Find("Level Manager").GetComponent<LevelManager>();
+        targetElevation = levelManager.getTarget();
 
+        closeToWin = false;
         maxAirJumps = 1;
     }
     
@@ -60,22 +67,48 @@ public class Player : MonoBehaviour
         
         elevation = transform.position.y;
         
+        //TODO: Add win condition here
+        if (elevation >= targetElevation)
+        {
+            Debug.Log("Win");
+        }
+        if (elevation >= targetElevation * 0.75f && !closeToWin)
+        {
+            closeToWin = true;
+            levelManager.intensifyMusic();
+        }
+        
         //Get horizontal value
         horizontalval = Input.GetAxisRaw("Horizontal");
         
         //Running input
         isRunning = Input.GetKey(KeyCode.LeftShift);
         
-        // Jumping & Double Jumping
-        if (Input.GetButtonDown("Jump") && airJumps > 0)
+        // Jumping & Double Jumping & Wall Jumping
+        crown = new Vector2(transform.position.x, transform.position.y + 0.5f);
+        feet = new Vector2(transform.position.x, transform.position.y - 1f);
+        checkGroundCollision();
+        int wall = wallCling();
+        
+        if (Input.GetButtonDown("Jump") && (airJumps > 0 || wall !=0))
         {
             animator.SetBool("Jump", true);
-            rb.velocity = new Vector2(rb.velocity.x,0);
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
             rb.AddForce(new Vector2(0f, 25 * jumpHeight));
+            
+            //TODO: Push off wall
+            
             if (!isGrounded)
             {
-                playerAS.clip = playerSounds[1];
-                airJumps--;
+                if (wall == 0)
+                {
+                    playerAS.clip = playerSounds[1];
+                    airJumps--;
+                }
+                else
+                {
+                    playerAS.clip = playerSounds[2];
+                }
             }
             else
             {
@@ -86,8 +119,6 @@ public class Player : MonoBehaviour
             
             //TODO: Control jumps by letting go at desired height
         }
-
-        checkCollision();
         
         // Set yVelocity
         animator.SetFloat("yVelocity", rb.velocity.y);
@@ -130,16 +161,10 @@ public class Player : MonoBehaviour
         animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
     }
 
-    private void checkCollision()
+    private void checkGroundCollision()
     {
-        Vector2 crown = new Vector2(transform.position.x, transform.position.y + 0.5f);
-        Vector2 feet = new Vector2(transform.position.x, transform.position.y - 1f);
         bool groundCheckL = Physics2D.Raycast(feet, Vector2.left, 0.5f, groundMask);
         bool groundCheckR = Physics2D.Raycast(feet, Vector2.right, 0.5f, groundMask);
-        bool rayCrownL= Physics2D.Raycast(crown, Vector2.left, wallCheckDistance, groundMask);
-        bool rayCrownR= Physics2D.Raycast(crown, Vector2.right, wallCheckDistance, groundMask);
-        bool rayFeetL= Physics2D.Raycast(feet, Vector2.left, wallCheckDistance, groundMask);
-        bool rayFeetR= Physics2D.Raycast(feet, Vector2.right, wallCheckDistance, groundMask);
 
         // Check if grounded, refresh jumps if so
         if (groundCheckL || groundCheckR)
@@ -158,8 +183,25 @@ public class Player : MonoBehaviour
             isGrounded = false;
             animator.SetBool("Jump", true);
         }
+    }
 
-        // Wall jumping
+    private int wallCling()
+    {
+        bool rayCrownL= Physics2D.Raycast(crown, Vector2.left, wallCheckDistance, groundMask);
+        bool rayCrownR= Physics2D.Raycast(crown, Vector2.right, wallCheckDistance, groundMask);
+        bool rayFeetL= Physics2D.Raycast(feet, Vector2.left, wallCheckDistance, groundMask);
+        bool rayFeetR= Physics2D.Raycast(feet, Vector2.right, wallCheckDistance, groundMask);
+
+        if (rayCrownL && rayFeetL)
+        {
+            return 1;
+        }
+        if (rayCrownR && rayFeetR)
+        {
+            return 2;
+        }
+        
+        return 0;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
