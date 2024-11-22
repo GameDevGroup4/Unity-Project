@@ -19,6 +19,10 @@ public class LoseScreenManagerController: MonoBehaviour
     
     private void LoadScreen()
     {
+        if (LevelManager.instance.levelAS.isPlaying)
+        {
+            LevelManager.instance.levelAS.Stop();
+        }
         SceneManager.LoadScene("Scenes/Start");
     }
 }

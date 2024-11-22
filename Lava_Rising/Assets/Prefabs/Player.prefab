@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5301960300726050537}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,6 +49,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b794502382eaa34ca2c44c3137fc426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  avaSounds:
+  - {fileID: 8300000, guid: a3fbf014266054a449c758ba2e503fd4, type: 3}
+  - {fileID: 8300000, guid: b35c6125be7d641adb22bfeee56a2a8e, type: 3}
+  harrySounds:
+  - {fileID: 8300000, guid: 03a763c0f96cd0f4e89558022bb940d4, type: 3}
+  - {fileID: 8300000, guid: 6e803295ee69de94c92d908d757b7a43, type: 3}
+  - {fileID: 8300000, guid: 0e180f25e7a7d2042b32d7d89a64c85b, type: 3}
+  - {fileID: 8300000, guid: a5232e901de1a074fadf21e582cd8631, type: 3}
   groundMask:
     serializedVersion: 2
     m_Bits: 128
