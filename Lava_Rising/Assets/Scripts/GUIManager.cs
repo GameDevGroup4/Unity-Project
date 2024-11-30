@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 using Slider = UnityEngine.UI.Slider;
@@ -41,7 +42,7 @@ public class GUIManager : MonoBehaviour
         }
         altimeter.value = player.position.y;
 
-        if (altimeter.value >= altimeter.maxValue * 0.75f && !closeToWin)
+        if (SceneManager.GetActiveScene().buildIndex == 5 && altimeter.value >= altimeter.maxValue * 0.75f && !closeToWin)
         {
             closeToWin = true;
             InvokeRepeating("blinkSlider", 0f, 0.5f);

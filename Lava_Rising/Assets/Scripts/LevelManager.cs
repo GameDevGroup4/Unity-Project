@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +10,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private AudioClip loseClipAva;
     [SerializeField] private AudioClip winClipHarry;
     [SerializeField] private AudioClip loseClipHarry;
+    [SerializeField] private AudioClip secretLevelMusic;
 
     private float targetElevation = 10f;
     
@@ -34,9 +33,42 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-    public void NextLevel()
+    public void NextLevel(GameObject interactingObject = null)
     {
-        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+        StopMusic();
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
+        if (currentSceneIndex == 3)
+        {
+            // Level 1: Transition to Level 2 when interacting with the door
+            if (interactingObject != null && interactingObject.CompareTag("Door"))
+            {
+                LoadScene("Scenes/Level2");
+            }
+        }
+        else if (currentSceneIndex == 4)
+        {
+            if (interactingObject != null)
+            {
+                if (interactingObject.CompareTag("Door"))
+                {
+                    // Level 2: Transition to Level 3
+                    LoadScene("Scenes/Level3");
+                }
+            }
+        }
+        else if (currentSceneIndex == 5)
+        {
+            // Level 3: Trigger win condition when interacting with the gate
+            if (interactingObject != null && interactingObject.CompareTag("Gate"))
+            {
+                endGame(true);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("NextLevel logic not defined for this scene.");
+        }
     }
 
     public void LoadScene(string sceneName)
@@ -48,6 +80,15 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         levelAS = GetComponent<AudioSource>();
+
+        // Check current scene and set appropriate music
+        if (SceneManager.GetActiveScene().buildIndex == 6) // Secret Level
+        {
+            levelAS.Stop(); // Stop any bubbling or previous sounds
+            levelAS.clip = secretLevelMusic; // Secret level background music
+            levelAS.loop = true;
+            levelAS.Play();
+        }
         time = 0;
     }
 
@@ -78,6 +119,14 @@ public class LevelManager : MonoBehaviour
         levelAS.clip = hopefulClip;
         levelAS.volume = 0.5f;
         levelAS.Play();
+    }
+    
+    public void StopMusic()
+    {
+        if (levelAS.isPlaying)
+        {
+            levelAS.Stop();
+        }
     }
 
     public void endGame(bool win)

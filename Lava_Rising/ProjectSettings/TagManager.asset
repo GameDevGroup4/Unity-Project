@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Secret
+  - doorBack
+  - Door
+  - Gate
   layers:
   - Default
   - TransparentFX

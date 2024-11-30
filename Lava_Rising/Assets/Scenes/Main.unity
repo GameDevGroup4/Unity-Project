@@ -4052,7 +4052,7 @@ GameObject:
   - component: {fileID: 1583780143}
   m_Layer: 0
   m_Name: doorNextLevel
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4198,6 +4198,7 @@ MonoBehaviour:
   loseClipAva: {fileID: 8300000, guid: b35c6125be7d641adb22bfeee56a2a8e, type: 3}
   winClipHarry: {fileID: 8300000, guid: 0e180f25e7a7d2042b32d7d89a64c85b, type: 3}
   loseClipHarry: {fileID: 8300000, guid: 6e803295ee69de94c92d908d757b7a43, type: 3}
+  secretLevelMusic: {fileID: 0}
   time: 0
 --- !u!4 &1630877542
 Transform:
@@ -4401,6 +4402,10 @@ PrefabInstance:
       propertyPath: playerSounds.Array.data[3]
       value: 
       objectReference: {fileID: 8300000, guid: a59236526ac1c4e7d85173d92cf70cdf, type: 3}
+    - target: {fileID: 5301960300726050537, guid: 77a7b7165ea8f054ea44edb0a7214e17, type: 3}
+      propertyPath: Loop
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7035821683616540711, guid: 77a7b7165ea8f054ea44edb0a7214e17, type: 3}
       propertyPath: m_Name
       value: Player

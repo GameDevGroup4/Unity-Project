@@ -69,13 +69,23 @@ public class Player : MonoBehaviour
     void Start()
     {
         playerAS.volume = 0.7f;
-        if (StartScreenManagerController.selectedMusic == "Harry")
+        if (SceneManager.GetActiveScene().buildIndex != 6)
         {
-            backgroundMusicSource.clip = harrySounds[0];
-            backgroundMusicSource.volume = 0.3f; // Lower volume for Harry's background music
+            if (StartScreenManagerController.selectedMusic == "Harry")
+            {
+                backgroundMusicSource.clip = harrySounds[0];
+                backgroundMusicSource.volume = 0.3f; // Lower volume for Harry's background music
+            }
+            backgroundMusicSource.loop = true; // Enable looping for background music
+            backgroundMusicSource.Play();
         }
-        backgroundMusicSource.loop = true; // Enable looping for background music
-        backgroundMusicSource.Play();
+        else
+        {
+            backgroundMusicSource.clip = harrySounds[3];
+            backgroundMusicSource.volume = 0.5f;
+            backgroundMusicSource.loop = true; // Enable looping for background music
+            backgroundMusicSource.Play();
+        }
     }
     
     void Update()
@@ -93,7 +103,7 @@ public class Player : MonoBehaviour
         {
             Debug.Log("Win");
         }
-        if (elevation >= targetElevation * 0.75f && !closeToWin)
+        if (SceneManager.GetActiveScene().buildIndex == 5 && elevation >= targetElevation * 0.75f && !closeToWin)
         {
             closeToWin = true;
             levelManager.intensifyMusic();
@@ -223,6 +233,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        
         // Check if we are colliding with a Tilemap
         Tilemap tilemap = collision.collider.GetComponentInParent<Tilemap>();
         if (tilemap != null)
@@ -252,10 +263,52 @@ public class Player : MonoBehaviour
             }
         }
     }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Secret"))
+        {
+            if (LevelManager.chooseMusic == "Harry")
+            {
+                Debug.Log("Entering Secret Level!");
+                SceneManager.LoadScene("Scenes/LevelS");
+            }
+            else
+            {
+                Debug.Log("Secret level inaccessible with Ava's music.");
+            }
+        }
+
+        if (collision.CompareTag("doorBack"))
+        {
+            SceneManager.LoadScene("Scenes/Level3");
+        }
+        
+    }
+    
     IEnumerator EndGameWithSound()
     {
             yield return new WaitForSeconds(playerSounds[3].length - 0.5f); 
             levelManager.endGame(false);
     }
+    
+    // IEnumerator RespawnNearTerminal()
+    // {
+    //     // Wait for the scene to finish loading
+    //     yield return new WaitForSeconds(0.1f);
+    //
+    //     // Locate the terminal object by its tag
+    //     GameObject terminal = GameObject.FindGameObjectWithTag("Secret");
+    //     if (terminal != null)
+    //     {
+    //         // Reposition the player near the terminal
+    //         ; // Adjust offset as needed
+    //         Debug.Log("Player respawned near the terminal at: " + transform.position);
+    //     }
+    //     else
+    //     {
+    //         Debug.LogWarning("Terminal object not found in Level 2!");
+    //     }
+    // }
     
 }

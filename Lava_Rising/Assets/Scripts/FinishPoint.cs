@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FinishPoint : MonoBehaviour
 {
@@ -6,7 +7,7 @@ public class FinishPoint : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            LevelManager.instance.NextLevel();
+            LevelManager.instance.NextLevel(gameObject);
         }
     }
 }

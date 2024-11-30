@@ -19,6 +19,10 @@ public class WinScreenManagerController: MonoBehaviour
     
     private void LoadScreen()
     {
+        if (LevelManager.instance.levelAS.isPlaying)
+        {
+            LevelManager.instance.levelAS.Stop();
+        }
         Debug.Log("Loading screen");
         SceneManager.LoadScene("Scenes/Start");
     }
