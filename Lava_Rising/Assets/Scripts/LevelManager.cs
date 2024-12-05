@@ -75,24 +75,19 @@ public class LevelManager : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(sceneName);
     }
-    
-    // Start is called before the first frame update
     void Start()
     {
         levelAS = GetComponent<AudioSource>();
-
-        // Check current scene and set appropriate music
+        
         if (SceneManager.GetActiveScene().buildIndex == 6) // Secret Level
         {
-            levelAS.Stop(); // Stop any bubbling or previous sounds
-            levelAS.clip = secretLevelMusic; // Secret level background music
+            levelAS.Stop();
+            levelAS.clip = secretLevelMusic;
             levelAS.loop = true;
             levelAS.Play();
         }
         time = 0;
     }
-
-    // Update is called once per frame
     void Update()
     {
         time += Time.deltaTime;
@@ -110,11 +105,9 @@ public class LevelManager : MonoBehaviour
             Player player = FindObjectOfType<Player>();
             if (player != null && player.backgroundMusicSource.isPlaying)
             {
-                player.backgroundMusicSource.Stop(); // Stop Harry's BGM
+                player.backgroundMusicSource.Stop();
             }
         }
-    
-        // Play the hopeful music regardless of the current background music
         levelAS.Stop();
         levelAS.clip = hopefulClip;
         levelAS.volume = 0.5f;

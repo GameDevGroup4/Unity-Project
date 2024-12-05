@@ -44,9 +44,9 @@ public class StartScreenManagerController : MonoBehaviour
         
         mainCamera = Camera.main;
         audioSource = mainCamera.GetComponent<AudioSource>();
-        avaButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f, 1.0f, 0.5f)); // Light green
-        avaText.style.color = new StyleColor(new Color(0.5f, 1.0f, 0.5f)); // Text color
-        harryButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(1.0f, 0.5f, 0.5f)); // Light red
+        avaButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f, 1.0f, 0.5f));
+        avaText.style.color = new StyleColor(new Color(0.5f, 1.0f, 0.5f));
+        harryButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(1.0f, 0.5f, 0.5f));
         harryText.style.color = new StyleColor(new Color(1.0f, 0.5f, 0.5f));
         
         
@@ -98,14 +98,14 @@ public class StartScreenManagerController : MonoBehaviour
         if (mute)
         {
             audioSource?.Pause();
-            muteButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f, 1.0f, 0.5f)); // Light green
-            muteText.style.color = new StyleColor(new Color(0.5f, 1.0f, 0.5f)); // Text color
+            muteButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f, 1.0f, 0.5f));
+            muteText.style.color = new StyleColor(new Color(0.5f, 1.0f, 0.5f));
         }
         else
         {
             audioSource?.Play();
-            muteButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(1.0f, 0.5f, 0.5f)); // Light red
-            muteText.style.color = new StyleColor(new Color(1.0f, 0.5f, 0.5f)); // Text color
+            muteButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(1.0f, 0.5f, 0.5f));
+            muteText.style.color = new StyleColor(new Color(1.0f, 0.5f, 0.5f));
         }
     }
 
@@ -139,23 +139,23 @@ public class StartScreenManagerController : MonoBehaviour
 
         if (selectedMusic == "Ava")
         {
-            // Update Ava button tint
-            avaButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f, 1.0f, 0.5f)); // Light green
-            avaText.style.color = new StyleColor(new Color(0.5f, 1.0f, 0.5f)); // Text color
+            //Ava button
+            avaButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f, 1.0f, 0.5f));
+            avaText.style.color = new StyleColor(new Color(0.5f, 1.0f, 0.5f));
 
-            // Update Harry button tint
-            harryButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(1.0f, 0.5f, 0.5f)); // Light red
-            harryText.style.color = new StyleColor(new Color(1.0f, 0.5f, 0.5f)); // Text color
+            //Harry button
+            harryButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(1.0f, 0.5f, 0.5f));
+            harryText.style.color = new StyleColor(new Color(1.0f, 0.5f, 0.5f));
         }
         else if (selectedMusic == "Harry")
         {
-            // Update Ava button tint
-            avaButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(1.0f, 0.5f, 0.5f)); // Light red
-            avaText.style.color = new StyleColor(new Color(1.0f, 0.5f, 0.5f)); // Text color
+            //Ava button
+            avaButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(1.0f, 0.5f, 0.5f));
+            avaText.style.color = new StyleColor(new Color(1.0f, 0.5f, 0.5f));
 
-            // Update Harry button tint
-            harryButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f, 1.0f, 0.5f)); // Light green
-            harryText.style.color = new StyleColor(new Color(0.5f, 1.0f, 0.5f)); // Text color
+            //Harry button
+            harryButton.style.unityBackgroundImageTintColor = new StyleColor(new Color(0.5f, 1.0f, 0.5f));
+            harryText.style.color = new StyleColor(new Color(0.5f, 1.0f, 0.5f));
         }
     }
 }

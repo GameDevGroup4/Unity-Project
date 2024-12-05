@@ -9,7 +9,6 @@ public class LoseScreenManagerController: MonoBehaviour
     private VisualElement _root;
     private Button _restartButton;
     
-    // Start is called before the first frame update
     void Start()
     {
         _root = GetComponent<UIDocument>().rootVisualElement;

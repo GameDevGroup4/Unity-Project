@@ -16,12 +16,8 @@ public class Player : MonoBehaviour
     public AudioSource backgroundMusicSource;
     
     [SerializeField] private LayerMask groundMask;
-    
     [SerializeField] private Animator animator;
-    
     [SerializeField] private AudioClip[] playerSounds;
-
-    private bool canMove = true;
     
     private Camera mainCamera;
     
@@ -31,9 +27,10 @@ public class Player : MonoBehaviour
     private float speed = 2f;
     private float jumpHeight = 10f;
     private float wallCheckDistance = 0.7f;
-    
     private float horizontalval;
     private float runSpeedMutiplier = 2;
+    private float elevation;
+    private float targetElevation;
 
     private int airJumps;
     private int maxAirJumps;
@@ -45,9 +42,7 @@ public class Player : MonoBehaviour
     private bool isRunning;
     private bool facingRight = true;
     private bool closeToWin;
-
-    private float elevation;
-    private float targetElevation;
+    private bool canMove = true;
     
     private void Awake()
     {
@@ -74,16 +69,16 @@ public class Player : MonoBehaviour
             if (StartScreenManagerController.selectedMusic == "Harry")
             {
                 backgroundMusicSource.clip = harrySounds[0];
-                backgroundMusicSource.volume = 0.3f; // Lower volume for Harry's background music
+                backgroundMusicSource.volume = 0.3f;
             }
-            backgroundMusicSource.loop = true; // Enable looping for background music
+            backgroundMusicSource.loop = true;
             backgroundMusicSource.Play();
         }
         else
         {
             backgroundMusicSource.clip = harrySounds[3];
             backgroundMusicSource.volume = 0.5f;
-            backgroundMusicSource.loop = true; // Enable looping for background music
+            backgroundMusicSource.loop = true;
             backgroundMusicSource.Play();
         }
     }
@@ -159,8 +154,6 @@ public class Player : MonoBehaviour
     
     void Move(float dir)
     {
-        //horizontal movement
-        
         //movement speed
         float xVal = dir * speed * 100 * Time.fixedDeltaTime;
         
@@ -183,7 +176,6 @@ public class Player : MonoBehaviour
             transform.localScale = new Vector3(1, 1, 1);
             facingRight = true;
         }
-        // Debug.Log(rb.velocity.x);
         
         // idle 0; walk 4; run 8
         animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
@@ -238,7 +230,6 @@ public class Player : MonoBehaviour
         Tilemap tilemap = collision.collider.GetComponentInParent<Tilemap>();
         if (tilemap != null)
         {
-            // Get the contact point of the collision
             ContactPoint2D contact = collision.contacts[0];
             
             // Convert the contact point to grid coordinates
@@ -247,6 +238,7 @@ public class Player : MonoBehaviour
             
             // Get the tile at the grid position
             TileBase tile = tilemap.GetTile(belowGridPosition);
+            
             //End game if the player touches lava
             if (tile != null)
             {
@@ -291,24 +283,5 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(playerSounds[3].length - 0.5f); 
             levelManager.endGame(false);
     }
-    
-    // IEnumerator RespawnNearTerminal()
-    // {
-    //     // Wait for the scene to finish loading
-    //     yield return new WaitForSeconds(0.1f);
-    //
-    //     // Locate the terminal object by its tag
-    //     GameObject terminal = GameObject.FindGameObjectWithTag("Secret");
-    //     if (terminal != null)
-    //     {
-    //         // Reposition the player near the terminal
-    //         ; // Adjust offset as needed
-    //         Debug.Log("Player respawned near the terminal at: " + transform.position);
-    //     }
-    //     else
-    //     {
-    //         Debug.LogWarning("Terminal object not found in Level 2!");
-    //     }
-    // }
     
 }
